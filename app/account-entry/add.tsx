@@ -36,6 +36,7 @@ export default function AddAccountEntryScreen() {
   const { user } = useAuth();
   const [saving, setSaving] = useState(false);
   const [files, setFiles] = useState<LocalFile[]>([]);
+  const [nameMode, setNameMode] = useState<'new' | 'old'>('new');
   const [form, setForm] = useState({
     date: todayISO(),
     name: '',
@@ -50,17 +51,14 @@ export default function AddAccountEntryScreen() {
     setForm((prev) => ({ ...prev, [key]: value }));
 
   const existingNames = useMemo(
-    () => Array.from(new Set(transactions.map((t) => t.name.trim()).filter(Boolean))).sort(),
+    () => Array.from(new Set(
+      transactions
+        .filter((t) => t.nagar_name === ACCOUNTS_LEDGER)
+        .map((t) => t.name.trim())
+        .filter(Boolean)
+    )).sort(),
     [transactions]
   );
-
-  const nameSuggestions = useMemo(() => {
-    const q = form.name.trim().toLowerCase();
-    if (!q) return existingNames.slice(0, 8);
-    return existingNames
-      .filter((n) => n.toLowerCase().includes(q))
-      .slice(0, 8);
-  }, [existingNames, form.name]);
 
   const detailSuggestions = useMemo(() => {
     const selectedName = form.name.trim().toLowerCase();
@@ -187,20 +185,43 @@ export default function AddAccountEntryScreen() {
 
           <View style={styles.field}>
             <Text style={styles.label}>Name *</Text>
-            <TextInput
-              style={styles.input}
-              value={form.name}
-              onChangeText={set('name')}
-              placeholder="Account name"
-              placeholderTextColor={AppColors.textSecondary}
-            />
-            {nameSuggestions.length > 0 && (
-              <View style={styles.suggestionRow}>
-                {nameSuggestions.map((n) => (
-                  <TouchableOpacity key={n} style={styles.suggestionChip} onPress={() => set('name')(n)}>
-                    <Text style={styles.suggestionText}>{n}</Text>
-                  </TouchableOpacity>
-                ))}
+            <View style={styles.nameModeRow}>
+              <TouchableOpacity
+                style={[styles.nameModeChip, nameMode === 'new' && styles.nameModeChipActive]}
+                onPress={() => { setNameMode('new'); set('name')(''); }}
+              >
+                <Text style={[styles.nameModeText, nameMode === 'new' && styles.nameModeTextActive]}>New</Text>
+              </TouchableOpacity>
+              <TouchableOpacity
+                style={[styles.nameModeChip, nameMode === 'old' && styles.nameModeChipActive]}
+                onPress={() => setNameMode('old')}
+              >
+                <Text style={[styles.nameModeText, nameMode === 'old' && styles.nameModeTextActive]}>Old</Text>
+              </TouchableOpacity>
+            </View>
+            {nameMode === 'new' ? (
+              <TextInput
+                style={styles.input}
+                value={form.name}
+                onChangeText={set('name')}
+                placeholder="Type new account name"
+                placeholderTextColor={AppColors.textSecondary}
+              />
+            ) : (
+              <View style={styles.oldNameList}>
+                {existingNames.length === 0 ? (
+                  <Text style={styles.oldNameEmpty}>No previous names yet. Use New to add one.</Text>
+                ) : (
+                  existingNames.map((n) => (
+                    <TouchableOpacity
+                      key={n}
+                      style={[styles.oldNameItem, form.name === n && styles.oldNameItemActive]}
+                      onPress={() => set('name')(n)}
+                    >
+                      <Text style={[styles.oldNameText, form.name === n && styles.oldNameTextActive]}>{n}</Text>
+                    </TouchableOpacity>
+                  ))
+                )}
               </View>
             )}
           </View>
@@ -399,14 +420,34 @@ const styles = StyleSheet.create({
   fileName: { flex: 1, fontSize: 13, color: AppColors.text },
   removeBtn: { padding: 4 },
   removeBtnText: { fontSize: 14, color: AppColors.textSecondary },
-  suggestionRow: { flexDirection: 'row', flexWrap: 'wrap', gap: 8, marginTop: 8 },
-  suggestionChip: {
-    backgroundColor: AppColors.primaryLight,
-    borderColor: AppColors.primary,
+  nameModeRow: { flexDirection: 'row', gap: 8, marginBottom: 8 },
+  nameModeChip: {
+    paddingHorizontal: 20,
+    paddingVertical: 8,
+    borderRadius: 20,
     borderWidth: 1,
-    borderRadius: 22,
-    paddingHorizontal: 16,
-    paddingVertical: 10,
+    borderColor: AppColors.border,
+    backgroundColor: AppColors.card,
   },
-  suggestionText: { color: AppColors.primary, fontSize: 15, fontWeight: '700' },
+  nameModeChipActive: { backgroundColor: AppColors.primary, borderColor: AppColors.primary },
+  nameModeText: { fontSize: 13, fontWeight: '700', color: AppColors.textSecondary },
+  nameModeTextActive: { color: '#fff' },
+  oldNameList: {
+    borderWidth: 1,
+    borderColor: AppColors.border,
+    borderRadius: 10,
+    overflow: 'hidden',
+    maxHeight: 220,
+  },
+  oldNameEmpty: { padding: 14, color: AppColors.textSecondary, fontSize: 13, textAlign: 'center' },
+  oldNameItem: {
+    paddingHorizontal: 14,
+    paddingVertical: 13,
+    borderBottomWidth: 1,
+    borderBottomColor: AppColors.border,
+    backgroundColor: AppColors.card,
+  },
+  oldNameItemActive: { backgroundColor: AppColors.primaryLight },
+  oldNameText: { fontSize: 15, fontWeight: '600', color: AppColors.text },
+  oldNameTextActive: { color: AppColors.primary, fontWeight: '700' },
 });

@@ -398,19 +398,6 @@ export default function PropertyPlotScreen() {
         </>
       )}
 
-      <TouchableOpacity
-        style={styles.pattaBtn}
-        onPress={() => WebBrowser.openBrowserAsync('https://eservices.tn.gov.in/eservicesnew/index.html')}
-        activeOpacity={0.85}
-      >
-        <Text style={styles.pattaBtnIcon}>🏛️</Text>
-        <View style={{ flex: 1 }}>
-          <Text style={styles.pattaBtnTitle}>Check Patta Chitta</Text>
-          <Text style={styles.pattaBtnSub}>TN eServices — Govt. of Tamil Nadu</Text>
-        </View>
-        <Text style={styles.pattaBtnArrow}>→</Text>
-      </TouchableOpacity>
-
       <Text style={styles.sectionTitle}>Plot documents</Text>
       <Text style={styles.sectionHint}>Long press a row to select, then tap more rows to multi-select</Text>
       {selectedUrls.size > 0 && (
@@ -515,15 +502,19 @@ export default function PropertyPlotScreen() {
         renderItem={({ item }) => {
           const r = (item.remarks || '').toLowerCase();
           const isSell = r.startsWith('sell price');
+          const isBroughtPrice = r.startsWith('brought price');
           const isExpense = r.startsWith('to cash:') || r.startsWith('expense');
           let chipLabel = '';
           let chipValue = 0;
           let chipColor = AppColors.income;
           let chipBg = AppColors.incomeLight;
-          if (isSell && item.cash_in > 0) {
+          if (isBroughtPrice && item.cash_in > 0) {
+            chipLabel = 'Brought Price'; chipValue = item.cash_in;
+            chipColor = AppColors.govt; chipBg = AppColors.govtLight;
+          } else if (isSell && item.cash_in > 0) {
             chipLabel = 'Sell Price'; chipValue = item.cash_in;
             chipColor = AppColors.govt; chipBg = AppColors.govtLight;
-          } else if (!isSell && item.cash_in > 0) {
+          } else if (!isSell && !isBroughtPrice && item.cash_in > 0) {
             chipLabel = 'By Cash'; chipValue = item.cash_in;
             chipColor = AppColors.income; chipBg = AppColors.incomeLight;
           } else if (isExpense && item.cash_out > 0) {
@@ -533,8 +524,8 @@ export default function PropertyPlotScreen() {
             chipLabel = 'To Cash'; chipValue = item.cash_out;
             chipColor = AppColors.balance; chipBg = AppColors.balanceLight;
           }
-          const remarkDisplay = item.remarks && !isSell
-            ? item.remarks.replace(/^(expense:|to cash:|sell price)/i, '').replace(/^\s*\|\s*/, '').trim()
+          const remarkDisplay = item.remarks && !isSell && !isBroughtPrice
+            ? item.remarks.replace(/^(expense:|to cash:|sell price|brought price)/i, '').replace(/^\s*\|\s*/, '').trim()
             : '';
           return (
             <TouchableOpacity
