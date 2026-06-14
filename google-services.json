@@ -1,0 +1,63 @@
+{
+  "project_info": {
+    "project_number": "934841654901",
+    "firebase_url": "https://ntr1-dbe06-default-rtdb.firebaseio.com",
+    "project_id": "ntr1-dbe06",
+    "storage_bucket": "ntr1-dbe06.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:934841654901:android:32c0671d13475650fb623c",
+        "android_client_info": {
+          "package_name": "com.ntr.ntr"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "934841654901-co9ik06scp19gfr8n4giqq6efi3tvrtn.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.ntr.ntr",
+            "certificate_hash": "b3585d77bea704a748553b7e4f89491c7bec3bb0"
+          }
+        },
+        {
+          "client_id": "934841654901-qi2rehlg4furt8tnh55g1kfhrnk4qa0j.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.ntr.ntr",
+            "certificate_hash": "39b677a1ea23eda9147a1e99ba4440ed171bc50a"
+          }
+        },
+        {
+          "client_id": "934841654901-2q55lt0p4bmp5nj6b87f59lbkk4itl9k.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBT_Rsx97cRJmR080-Iio51sj7BR6PPNQ4"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "934841654901-2q55lt0p4bmp5nj6b87f59lbkk4itl9k.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "934841654901-v1lec210dd3e6epfkhg4uv4fvd738k42.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.ntr.ntr"
+              }
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
