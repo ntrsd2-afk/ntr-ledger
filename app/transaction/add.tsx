@@ -178,7 +178,6 @@ export default function AddTransactionScreen() {
 
 
   async function handleSave() {
-    if (!form.name.trim()) { Alert.alert('Validation', 'Name is required.'); return; }
     if (!form.date.trim()) { Alert.alert('Validation', 'Date is required.'); return; }
 
     const parsedCashIn = isFinancialOnly
@@ -273,7 +272,7 @@ export default function AddTransactionScreen() {
             <TextInput style={styles.input} value={form.date} onChangeText={set('date')} placeholderTextColor={AppColors.textSecondary} />
           </View>
           <View style={styles.fieldContainer}>
-            <Text style={styles.label}>Name <Text style={styles.required}>*</Text></Text>
+            <Text style={styles.label}>Name</Text>
             <TextInput
               style={styles.input}
               value={form.name}

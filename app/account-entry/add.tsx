@@ -208,7 +208,7 @@ export default function AddAccountEntryScreen() {
                 placeholderTextColor={AppColors.textSecondary}
               />
             ) : (
-              <View style={styles.oldNameList}>
+              <ScrollView style={styles.oldNameList} nestedScrollEnabled keyboardShouldPersistTaps="handled">
                 {existingNames.length === 0 ? (
                   <Text style={styles.oldNameEmpty}>No previous names yet. Use New to add one.</Text>
                 ) : (
@@ -222,7 +222,7 @@ export default function AddAccountEntryScreen() {
                     </TouchableOpacity>
                   ))
                 )}
-              </View>
+              </ScrollView>
             )}
           </View>
 
